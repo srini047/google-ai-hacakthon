@@ -1,6 +1,7 @@
 import os
-import requests
 from dotenv import load_dotenv
+
+import requests
 from enum import Enum
 from fastapi import FastAPI
 import google.generativeai as genai
@@ -8,8 +9,8 @@ import google.generativeai as genai
 load_dotenv()
 
 # Google GenAI Configure
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-EDENAI_API_KEY = os.getenv("EDENAI_API_KEY")
+GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+EDENAI_API_KEY = os.environ.get("EDENAI_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY)
 
 text_model = genai.GenerativeModel("gemini-pro")
@@ -163,7 +164,7 @@ def get_experiment_procedure(title: str, subject: Subjects) -> dict:
 
 
 @app.post("/experiment/tabulation")
-def get_experiment_procedure(title: str, subject: Subjects) -> dict:
+def get_experiment_tabulation(title: str, subject: Subjects) -> dict:
     prompt = f"""
         Generate a table with necessary column names to derive the results of the experiment
         titled {title} and the subject being {subject} based on which the experiment corresponds to.
@@ -171,6 +172,39 @@ def get_experiment_procedure(title: str, subject: Subjects) -> dict:
         Response must contain only the column headers with sample values with accurate units of measurement.
 
         Answer : {{Tabulation}}
+    """
+
+    response = text_model.generate_content(prompt)
+
+    return {"response": response.text}
+
+
+@app.post("/experiment/result")
+def get_experiment_result(title: str, subject: Subjects) -> dict:
+    prompt = f"""
+        Generate the results of the experiment titled {title} and on the
+        subject {subject} based on which the experiment corresponds to.
+
+        Response must contain only the text for the result of the experiment.
+
+        Answer : {{Result}}
+    """
+
+    response = text_model.generate_content(prompt)
+
+    return {"response": response.text}
+
+
+@app.post("/experiment/precautions")
+def get_experiment_precautions(title: str, subject: Subjects) -> dict:
+    prompt = f"""
+        Generate  list (in form of bullet points) of what precations must be taken for the experiment
+        titled {title} subject {subject} based on which the experiment corresponds to.
+
+        Response must contain only list of precautions. Consider the experiment is done by students
+        and generate all the necessary precautions even the smallest of things.
+
+        Answer : {{Precautions}}
     """
 
     response = text_model.generate_content(prompt)
