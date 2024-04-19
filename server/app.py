@@ -145,6 +145,7 @@ def get_experiment_procedure(title: str, subject: Subjects) -> dict:
 
     return {"response": response.text}
 
+
 @app.post("/experiment/procedure")
 def get_experiment_procedure(title: str, subject: Subjects) -> dict:
     prompt = f"""
@@ -154,6 +155,22 @@ def get_experiment_procedure(title: str, subject: Subjects) -> dict:
         Response must only contain bullets no need any headings.
 
         Answer : {{Procedure}}
+    """
+
+    response = text_model.generate_content(prompt)
+
+    return {"response": response.text}
+
+
+@app.post("/experiment/tabulation")
+def get_experiment_procedure(title: str, subject: Subjects) -> dict:
+    prompt = f"""
+        Generate a table with necessary column names to derive the results of the experiment
+        titled {title} and the subject being {subject} based on which the experiment corresponds to.
+
+        Response must contain only the column headers with sample values with accurate units of measurement.
+
+        Answer : {{Tabulation}}
     """
 
     response = text_model.generate_content(prompt)
