@@ -30,6 +30,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 // Lucide react imports
 import { BadgeInfo } from "lucide-react";
@@ -177,6 +178,18 @@ export default function learn() {
           </CarouselContent>
         </Carousel>
       </div>
+
+      {/* Supporting Video */}
+      {/* <div className="flex justify-center items-center p-10">
+        <AspectRatio ratio={16 / 9} className="bg-muted">
+          <video autoPlay muted playsInline>
+            <source
+              src="https://youtu.be/9twcmtQj4DU?si=FtQX9IV5LEa4Amz9"
+              type="video/mp4"
+            />
+          </video>
+        </AspectRatio>
+      </div> */}
 
       {/* Procedure */}
       <div className="p-8">
